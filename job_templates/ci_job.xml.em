@@ -189,7 +189,7 @@ docker build --build-arg PLATFORM=arm -t ros2_batch_ci_aarch64 linux_docker_reso
 @[  if turtlebot_demo]@
 docker build --build-arg INSTALL_TURTLEBOT2_DEMO_DEPS=true -t ros2_batch_ci_turtlebot_demo linux_docker_resources
 @[  else]@
-docker build -t ros2_batch_ci linux_docker_resources --shm-size=1g
+docker build -t ros2_batch_ci linux_docker_resources
 @[  end if]@
 @[else]@
 @{ assert 'Unknown os_name: ' + os_name }@
@@ -205,7 +205,7 @@ export CONTAINER_NAME=ros2_batch_ci_aarch64
 @[else]@
 @{ assert 'Unknown os_name: ' + os_name }@
 @[end if]@
-docker run --privileged -e UID=`id -u` -e GID=`id -g` -e CI_ARGS="$CI_ARGS" -e CCACHE_DIR=/home/rosbuild/.ccache -i -v `pwd`:/home/rosbuild/ci_scripts -v $HOME/.ccache:/home/rosbuild/.ccache $CONTAINER_NAME
+docker run --privileged -e UID=`id -u` -e GID=`id -g` -e CI_ARGS="$CI_ARGS" -e CCACHE_DIR=/home/rosbuild/.ccache -i -v `pwd`:/home/rosbuild/ci_scripts -v $HOME/.ccache:/home/rosbuild/.ccache $CONTAINER_NAME --shm-size=1g
 echo "# END SECTION"
 @[else]@
 echo "# BEGIN SECTION: Run script"
