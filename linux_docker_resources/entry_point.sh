@@ -20,6 +20,9 @@ echo "Enabling multicast..."
 ifconfig eth0 multicast
 echo "done."
 
+# Report file system disk space usage
+df -h
+
 case "${CI_ARGS}" in
   *--connext*)
     echo "Installing Connext..."
