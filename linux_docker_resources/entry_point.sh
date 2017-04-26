@@ -49,7 +49,7 @@ case "${CI_ARGS}" in
     sysctl -a | grep kernel.sem
     sysctl -a | grep kernel.shm
     echo kernel.sem = 250 32000 100 1024 >> /etc/sysctl.conf
-    echo kernel.sysv.shmmax.sem = 1073741824 >> /etc/sysctl.conf
+    echo kernel.shmmax = 1073741824 >> /etc/sysctl.conf
     echo "after setting new rti values"
     sysctl -a | grep kernel.sem
     sysctl -a | grep kernel.shm
