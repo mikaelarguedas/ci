@@ -45,7 +45,14 @@ case "${CI_ARGS}" in
         export RTI_LICENSE_FILE=/home/rosbuild/rti_license.dat
         ;;
     esac
-    echo kernel.sem = 250 32000 100 1024 > /etc/sysctl.conf
+    echo "before setting new rti values"
+    sysctl -a | grep kernel.sem
+    sysctl -a | grep kernel.shm
+    echo kernel.sem = 250 32000 100 1024 >> /etc/sysctl.conf
+    echo kernel.sysv.shmmax.sem = 1073741824 >> /etc/sysctl.conf
+    echo "after setting new rti values"
+    sysctl -a | grep kernel.sem
+    sysctl -a | grep kernel.shm
     echo "done."
     ;;
   *)
