@@ -1,5 +1,3 @@
-ENV DOCKER_FIX ' '
-
 FROM ubuntu:xenial
 ARG BRIDGE=false
 ARG INSTALL_TURTLEBOT2_DEMO_DEPS=false
@@ -53,6 +51,8 @@ RUN if test ${PLATFORM} = x86; then apt-get update && apt-get install --no-insta
 
 # Install dependencies for RTI web binaries install script.
 RUN pip3 install pexpect
+
+ENV DOCKER_FIX ' '
 
 # Get and install the RTI web binaries.
 RUN curl --silent http://s3.amazonaws.com/RTI/Bundles/5.2.3/Evaluation/rti_connext_dds-5.2.3-eval-x64Linux3gcc4.8.2.run -o /tmp/rti-installer.run && chmod +x /tmp/rti-installer.run
