@@ -1,3 +1,5 @@
+ENV DOCKER_FIX ' '
+
 FROM ubuntu:xenial
 ARG BRIDGE=false
 ARG INSTALL_TURTLEBOT2_DEMO_DEPS=false
