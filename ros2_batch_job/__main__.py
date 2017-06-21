@@ -241,7 +241,7 @@ def build_and_test(args, job):
             ['--cmake-args', '-DCMAKE_BUILD_TYPE=' +
                 args.cmake_build_type + ' --']
             if args.cmake_build_type else []
-        ) + args.ament_build_args + '--' +
+        ) + args.ament_build_args + ['--'] +
         (['--ament-cmake-args -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} ' +
             gcov_flags + ' " -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} ' +
             gcov_flags + '" --']
