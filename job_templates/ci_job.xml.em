@@ -257,8 +257,8 @@ if "%CI_CMAKE_BUILD_TYPE%" == "Debug" (
 if "%CI_ENABLE_C_COVERAGE%" == "true" (
   set "CI_ARGS=%CI_ARGS% --coverage"
 )
-echo "%CI_AMENT_BUILD_ARGS%" > ament_build.args
-echo "%CI_AMENT_TEST_ARGS%" > ament_test.args
+echo %CI_AMENT_BUILD_ARGS% > ament_build.args
+echo %CI_AMENT_TEST_ARGS% > ament_test.args
 echo Using args: %CI_ARGS%
 echo "# END SECTION"
 
