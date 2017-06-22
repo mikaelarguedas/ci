@@ -149,28 +149,9 @@ fi
 if [ "$CI_ENABLE_C_COVERAGE" = "true" ]; then
   export CI_ARGS="$CI_ARGS --coverage"
 fi
-if [ -n "${CI_AMENT_BUILD_ARGS+x}" ]; then
-  case $CI_AMENT_BUILD_ARGS in
-    *-- )
-      # delimiter is already appended
-      ;;
-    * )
-      CI_AMENT_BUILD_ARGS="$CI_AMENT_BUILD_ARGS --"
-      ;;
-  esac
-  export CI_ARGS="$CI_ARGS --ament-build-args $CI_AMENT_BUILD_ARGS"
-fi
-if [ -n "${CI_AMENT_TEST_ARGS+x}" ]; then
-  case $CI_AMENT_TEST_ARGS in
-    *-- )
-      # delimiter is already appended
-      ;;
-    * )
-      CI_AMENT_TEST_ARGS="$CI_AMENT_TEST_ARGS --"
-      ;;
-  esac
-  export CI_ARGS="$CI_ARGS --ament-test-args $CI_AMENT_TEST_ARGS"
-fi
+echo "${CI_AMENT_BUILD_ARGS}" > ament_build.args
+echo "${CI_AMENT_TEST_ARGS}" > ament_test.args
+
 @[if os_name in ['linux', 'linux-aarch64'] and turtlebot_demo]@
 export CI_ARGS="$CI_ARGS --ros1-path /opt/ros/kinetic"
 @[end if]@
@@ -217,11 +198,11 @@ export CONTAINER_NAME=ros2_batch_ci_aarch64
 @[else]@
 @{ assert 'Unknown os_name: ' + os_name }@
 @[end if]@
-docker run --privileged -e UID=`id -u` -e GID=`id -g` -e CI_ARGS="$CI_ARGS" -e CCACHE_DIR=/home/rosbuild/.ccache -i -v `pwd`:/home/rosbuild/ci_scripts -v $HOME/.ccache:/home/rosbuild/.ccache $CONTAINER_NAME
+docker run --privileged -e UID=`id -u` -e GID=`id -g` -e CI_ARGS="$CI_ARGS" -e CCACHE_DIR=/home/rosbuild/.ccache -e AMENT_BUILD_ARGS="$CI_AMENT_BUILD_ARGS" -e AMENT_TEST_ARGS="$CI_AMENT_TEST_ARGS" -i -v `pwd`:/home/rosbuild/ci_scripts -v $HOME/.ccache:/home/rosbuild/.ccache $CONTAINER_NAME
 echo "# END SECTION"
 @[else]@
 echo "# BEGIN SECTION: Run script"
-/usr/local/bin/python3 -u run_ros2_batch.py $CI_ARGS
+/usr/local/bin/python3 -u run_ros2_batch.py --ament-build-args-file=ament_build.args --ament-test-args-file=ament_test.args $CI_ARGS
 echo "# END SECTION"
 @[end if]@
 @[elif os_name == 'windows']@
@@ -276,23 +257,13 @@ if "%CI_CMAKE_BUILD_TYPE%" == "Debug" (
 if "%CI_ENABLE_C_COVERAGE%" == "true" (
   set "CI_ARGS=%CI_ARGS% --coverage"
 )
-if "%CI_AMENT_BUILD_ARGS%" NEQ "" (
-  if "%CI_AMENT_BUILD_ARGS:~-2%" NEQ "--" (
-    set "CI_AMENT_BUILD_ARGS=%CI_AMENT_BUILD_ARGS% --"
-  )
-  set "CI_ARGS=%CI_ARGS% --ament-build-args %CI_AMENT_BUILD_ARGS%"
-)
-if "%CI_AMENT_TEST_ARGS%" NEQ "" (
-  if "%CI_AMENT_TEST_ARGS:~-2%" NEQ "--" (
-    set "CI_AMENT_TEST_ARGS=%CI_AMENT_TEST_ARGS% --"
-  )
-  set "CI_ARGS=%CI_ARGS% --ament-test-args %CI_AMENT_TEST_ARGS%"
-)
+echo "%CI_AMENT_BUILD_ARGS%" > ament_build.args
+echo "%CI_AMENT_TEST_ARGS%" > ament_test.args
 echo Using args: %CI_ARGS%
 echo "# END SECTION"
 
 echo "# BEGIN SECTION: Run script"
-python -u run_ros2_batch.py %CI_ARGS%
+python -u run_ros2_batch.py --ament-build-args-file=ament_build.args --ament-test-args-file=ament_test.args %CI_ARGS%
 echo "# END SECTION"
 @[else]@
 @{ assert 'Unknown os_name: ' + os_name }@

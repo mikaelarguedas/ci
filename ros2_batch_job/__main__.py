@@ -133,11 +133,11 @@ def get_args(sysargv=None):
         '--cmake-build-type', default=None,
         help='select the CMake build type')
     parser.add_argument(
-        '--ament-build-args', default=None,
-        help="arguments passed to 'ament build'")
+        '--ament-build-args-file', default=None,
+        help="file containing arguments to be passed to 'ament build'")
     parser.add_argument(
-        '--ament-test-args', default=None,
-        help="arguments passed to 'ament test'")
+        '--ament-test-args-file', default=None,
+        help="file containing arguments to be passed to 'ament test'")
     parser.add_argument(
         '--src-mounted', default=False, action='store_true',
         help="src directory is already mounted into the workspace")
@@ -152,14 +152,11 @@ def get_args(sysargv=None):
         help='pass different Python interpreter to ament')
 
     argv = sysargv[1:] if sysargv is not None else sys.argv[1:]
-    argv, ament_build_args = extract_argument_group(argv, '--ament-build-args')
-    if '--ament-test-args' in argv:
-        argv, ament_test_args = extract_argument_group(argv, '--ament-test-args')
-    else:
-        ament_build_args, ament_test_args = extract_argument_group(ament_build_args, '--ament-test-args')
     args = parser.parse_args(argv)
-    args.ament_build_args = ament_build_args
-    args.ament_test_args = ament_test_args
+    with open(args.ament_build_args_file, 'r') as infp:
+        args.ament_build_args = [word for word in infp.read().split()]
+    with open(args.ament_test_args_file, 'r') as infp:
+        args.ament_test_args = [word for word in infp.read().split()]
     return args
 
 

@@ -58,4 +58,6 @@ echo "done."
 
 cd /home/rosbuild/ci_scripts
 
+echo "$AMENT_BUILD_ARGS" > /tmp/ament_build.args
+echo "$AMENT_TEST_ARGS" > /tmp/ament_test.args
 exec sudo -H -u rosbuild -E -- /bin/sh -c "$*"

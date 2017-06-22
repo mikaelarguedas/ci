@@ -112,4 +112,4 @@ RUN chmod 755 /entry_point.sh
 
 ENTRYPOINT ["/entry_point.sh"]
 
-CMD ["python3 -u run_ros2_batch.py $CI_ARGS"]
+CMD ["python3 -u run_ros2_batch.py --ament-build-args-file=/tmp/ament_build.args --ament-test-args-file=/tmp/ament_test.args $CI_ARGS"]
