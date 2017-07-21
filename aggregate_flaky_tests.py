@@ -113,7 +113,7 @@ def main(argv=sys.argv[1:]):
                 failing_tests[test_failure] = [job]
     ordered_failing_tests_dict = OrderedDict(sorted(failing_tests.items(), key=lambda t: t[0]))
     for key, value in ordered_failing_tests_dict.items():
-        print('%s, %s' % (key, value))
+        print(' - [ ] %s, %s' % (key, value))
     print(len(failing_tests.keys()))
 
 
