@@ -2,7 +2,7 @@ import argparse
 from collections import OrderedDict
 import sys
 
-from jenkinsapi.custom_exceptions import UnknownJob
+from jenkinsapi.custom_exceptions import NotFound, UnknownJob
 from jenkinsapi.jenkins import Jenkins
 
 J = Jenkins('http://ci.ros2.org')
@@ -50,7 +50,10 @@ def get_job_test_failures(
     if build_number is None:
         print('As build number should be provided, skipping %s' % job, file=sys.stderr)
         return list()
-    build = job.get_build(build_number)
+    try:
+        build = job.get_build(build_number)
+    except NotFound:
+        return list()
     if not build.has_resultset():
         return list()
     test_results = build.get_resultset()
